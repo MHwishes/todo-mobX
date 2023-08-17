@@ -1,32 +1,21 @@
-const TodoItem = ({ todoItem, todoList, setTodoList }) => {
+import { useContext } from 'react';
+import { observer } from 'mobx-react';
+import { TodoStoreContext } from '../store';
+
+const TodoItem = observer(({ todoItem }) => {
   const { text, id, done } = todoItem;
-
-  const deleteItem = () => {
-    const newTodoList = todoList.filter((item) => item.id !== id);
-    setTodoList(newTodoList);
-  };
-
-  const toggleItem = () => {
-    const newTodoList = todoList.map((item) => {
-      if (item.id === id) {
-        return { ...item, done: !item.done };
-      } else {
-        return item;
-      }
-    });
-    setTodoList(newTodoList);
-  };
+  const store = useContext(TodoStoreContext);
 
   return (
     <div className='todo-item-container'>
       <div
         className={done ? 'todo-item todo-done' : 'todo-item'}
-        onClick={() => toggleItem()}
+        onClick={() => todoItem.toggleCompleted()}
       >
         {text}
       </div>
-      <button onClick={() => deleteItem()}>x</button>
+      <button onClick={() => store.removeTodo(id)}>x</button>
     </div>
   );
-};
+});
 export default TodoItem;

@@ -1,16 +1,16 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import { observer } from 'mobx-react';
+import { TodoStoreContext } from '../store';
 
-const TodoGenerator = ({ setTodoList, todoList }) => {
+const TodoGenerator = observer(() => {
   const [inputText, setInputText] = useState('');
+  const store = useContext(TodoStoreContext);
 
   const handleAddList = () => {
-    const newTodoItem = {
-      id: Date.now(),
-      text: inputText,
-      done: false,
-    };
-    setTodoList([...todoList, newTodoItem]);
-    setInputText('');
+    if (inputText.trim()) {
+      store.addTodo(inputText.trim());
+      setInputText('');
+    }
   };
 
   return (
@@ -27,5 +27,5 @@ const TodoGenerator = ({ setTodoList, todoList }) => {
       </button>
     </div>
   );
-};
+});
 export default TodoGenerator;
